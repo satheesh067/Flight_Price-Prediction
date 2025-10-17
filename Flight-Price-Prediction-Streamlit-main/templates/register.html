@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Flight Price Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('home') }}" class="back-to-home">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="floating-clouds">
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1 class="auth-title">Join Our Journey!</h1>
+                <p class="auth-subtitle">Create your account to start predicting flight prices</p>
+            </div>
+
+            <div class="auth-body">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" id="registerForm">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        <label for="email">
+                            <i class="fas fa-envelope me-2"></i>Email Address
+                        </label>
+                    </div>
+
+                    <div class="form-floating mb-3 password-field">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        <label for="password">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility" tabindex="0">
+                            <i class="far fa-eye" id="togglePasswordIcon"></i>
+                        </button>
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="password-requirements">
+                                <div class="requirement not-met" id="req-length">
+                                    <i class="fas fa-times"></i>At least 8 characters
+                                </div>
+                                <div class="requirement not-met" id="req-uppercase">
+                                    <i class="fas fa-times"></i>One uppercase letter
+                                </div>
+                                <div class="requirement not-met" id="req-lowercase">
+                                    <i class="fas fa-times"></i>One lowercase letter
+                                </div>
+                                <div class="requirement not-met" id="req-number">
+                                    <i class="fas fa-times"></i>One number
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3 password-field">
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                        <label for="confirm_password">
+                            <i class="fas fa-lock me-2"></i>Confirm Password
+                        </label>
+                        <button type="button" class="password-toggle" aria-label="Toggle confirm password visibility" tabindex="0">
+                            <i class="far fa-eye" id="toggleConfirmPasswordIcon"></i>
+                        </button>
+                        <div class="password-match" id="passwordMatch" style="display: none;">
+                            <small class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>Passwords match
+                            </small>
+                        </div>
+                        <div class="password-mismatch" id="passwordMismatch" style="display: none;">
+                            <small class="text-danger">
+                                <i class="fas fa-times-circle me-1"></i>Passwords don't match
+                            </small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-auth" id="registerBtn" disabled>
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>Already a member?</span>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-0">
+                        Already have an account? 
+                        <a href="{{ url_for('login') }}" class="auth-link">
+                            Sign in here
+                            <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+            const registerBtn = document.getElementById('registerBtn');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const strengthFill = document.getElementById('strengthFill');
+            const passwordMatch = document.getElementById('passwordMatch');
+            const passwordMismatch = document.getElementById('passwordMismatch');
+
+            // Password visibility toggles
+            const togglePasswordBtn = document.getElementById('togglePasswordIcon').parentElement;
+            const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPasswordIcon').parentElement;
+            const toggleVisibility = (input, icon) => {
+                const isHidden = input.type === 'password';
+                input.type = isHidden ? 'text' : 'password';
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            };
+            if (togglePasswordBtn) {
+                togglePasswordBtn.addEventListener('click', () => toggleVisibility(password, document.getElementById('togglePasswordIcon')));
+                togglePasswordBtn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleVisibility(password, document.getElementById('togglePasswordIcon')); }
+                });
+            }
+            if (toggleConfirmPasswordBtn) {
+                toggleConfirmPasswordBtn.addEventListener('click', () => toggleVisibility(confirmPassword, document.getElementById('toggleConfirmPasswordIcon')));
+                toggleConfirmPasswordBtn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleVisibility(confirmPassword, document.getElementById('toggleConfirmPasswordIcon')); }
+                });
+            }
+
+            // Password strength checker
+            password.addEventListener('input', function() {
+                const value = this.value;
+                const strength = checkPasswordStrength(value);
+                
+                if (value.length > 0) {
+                    passwordStrength.style.display = 'block';
+                    updatePasswordStrength(strength);
+                    updatePasswordRequirements(value);
+                } else {
+                    passwordStrength.style.display = 'none';
+                }
+                
+                updateRegisterButton();
+            });
+
+            // Password confirmation checker
+            confirmPassword.addEventListener('input', function() {
+                const passwordValue = password.value;
+                const confirmValue = this.value;
+                
+                if (confirmValue.length > 0) {
+                    if (passwordValue === confirmValue) {
+                        passwordMatch.style.display = 'block';
+                        passwordMismatch.style.display = 'none';
+                        confirmPassword.style.borderColor = '#4caf50';
+                    } else {
+                        passwordMatch.style.display = 'none';
+                        passwordMismatch.style.display = 'block';
+                        confirmPassword.style.borderColor = '#f44336';
+                    }
+                } else {
+                    passwordMatch.style.display = 'none';
+                    passwordMismatch.style.display = 'none';
+                    confirmPassword.style.borderColor = '#e9ecef';
+                }
+                
+                updateRegisterButton();
+            });
+
+            function checkPasswordStrength(password) {
+                let score = 0;
+                
+                if (password.length >= 8) score++;
+                if (/[a-z]/.test(password)) score++;
+                if (/[A-Z]/.test(password)) score++;
+                if (/[0-9]/.test(password)) score++;
+                if (/[^A-Za-z0-9]/.test(password)) score++;
+                
+                return score;
+            }
+
+            function updatePasswordStrength(strength) {
+                strengthFill.className = 'strength-fill';
+                
+                if (strength <= 2) {
+                    strengthFill.classList.add('strength-weak');
+                } else if (strength === 3) {
+                    strengthFill.classList.add('strength-fair');
+                } else if (strength === 4) {
+                    strengthFill.classList.add('strength-good');
+                } else {
+                    strengthFill.classList.add('strength-strong');
+                }
+            }
+
+            function updatePasswordRequirements(password) {
+                const requirements = {
+                    'req-length': password.length >= 8,
+                    'req-uppercase': /[A-Z]/.test(password),
+                    'req-lowercase': /[a-z]/.test(password),
+                    'req-number': /[0-9]/.test(password)
+                };
+
+                Object.keys(requirements).forEach(req => {
+                    const element = document.getElementById(req);
+                    if (requirements[req]) {
+                        element.classList.remove('not-met');
+                        element.classList.add('met');
+                        element.querySelector('i').className = 'fas fa-check';
+                    } else {
+                        element.classList.remove('met');
+                        element.classList.add('not-met');
+                        element.querySelector('i').className = 'fas fa-times';
+                    }
+                });
+            }
+
+            function updateRegisterButton() {
+                const email = document.getElementById('email').value;
+                const passwordValue = password.value;
+                const confirmValue = confirmPassword.value;
+                const strength = checkPasswordStrength(passwordValue);
+                
+                const isValid = email.length > 0 && 
+                               passwordValue.length >= 8 && 
+                               confirmValue.length > 0 && 
+                               passwordValue === confirmValue && 
+                               strength >= 3;
+                
+                registerBtn.disabled = !isValid;
+            }
+
+            // Form submission animation
+            form.addEventListener('submit', function(e) {
+                const passwordValue = password.value;
+                const confirmValue = confirmPassword.value;
+                
+                if (passwordValue !== confirmValue) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+                registerBtn.disabled = true;
+            });
+
+            // Enhanced form interactions
+            const inputs = form.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

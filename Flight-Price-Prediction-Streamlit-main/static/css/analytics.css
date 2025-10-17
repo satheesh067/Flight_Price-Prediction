@@ -1,0 +1,72 @@
+/* Analytics Dashboard Styles */
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+#bestDeals .card {
+    border-left: 4px solid #28a745;
+}
+
+#alertsSummary .card {
+    border-left: 4px solid #007bff;
+}
+
+#routeStats .card {
+    border-left: 4px solid #17a2b8;
+}
+
+#bestBookingTime .card {
+    border-left: 4px solid #ffc107;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+/* Theme Support */
+[data-theme="dark"] {
+    background-color: #343a40;
+    color: #fff;
+}
+
+[data-theme="dark"] .card {
+    background-color: #454d55;
+    border-color: #454d55;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #3d444b;
+    border-bottom-color: #454d55;
+}
+
+[data-theme="dark"] .card-header h2 {
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .card-header h2 {
+        font-size: 1.2rem;
+    }
+}

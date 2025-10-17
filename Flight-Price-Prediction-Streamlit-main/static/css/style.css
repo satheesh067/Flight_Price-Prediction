@@ -1,0 +1,64 @@
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+#predictionResult {
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+}
+
+#predictionResult.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    display: block;
+}
+
+#predictionResult.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    display: block;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.spinner-border {
+    margin-right: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .table-responsive {
+        max-height: 300px;
+    }
+}
